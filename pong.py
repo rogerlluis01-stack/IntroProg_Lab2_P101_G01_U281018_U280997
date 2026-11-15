@@ -116,36 +116,23 @@ def change_colors() -> tuple[tuple[int, int, int], tuple[int, int, int]]:
     return backg_col, foreg_col
 
 def read_color(prompt: str) -> tuple[int, int, int]:
-    """Ask the user to enter the three RGB components of a color with each component in [0,255].
-    The function receives a short text (for example: "background" or "foreground")
-    that identifies which color is being configured.
+    """
+    Ask the player to enter a color as its RGB components.
+    'prompt' is the name of the element being colored
+    ("background" or "foreground").
+    Returns the color as an (R, G, B) tuple.
+    """
 
-    For each of the three color components — Red, Green, and Blue —
-    the function should ask the user to enter an integer between 0 and 255
-    (both included). Use the helper function `read_int_in_range()` to
-    safely read each component.
+    # Tell the player which color they are choosing
+    print(f"Enter the {prompt} color:")
 
-    Parameters
-    ----------
-    prompt : str
-        A word describing the color to be read (e.g. "background", "foreground").
+    # Ask for each RGB component; each must be between 0 and 255
+    r = read_int_in_range("Red", 0, 255) # amount of red
+    g = read_int_in_range("Green", 0, 255) # amount of green
+    b = read_int_in_range("Blue", 0, 255) # amount of blue
 
-    Returns
-    -------
-    int, int, int
-        A tuple (r, g, b) representing the color chosen by the user,
-        where each component is an integer in the range [0, 255].
-
-    Notes and hints
-    ---------------
-    - Call `read_int_in_range()` three times, once for each component (Red, Green, Blue).
-    - Return all three integers together as a single tuple.
-    - In pygame, colors are always expressed as (R, G, B) tuples.
-    - Keep the order (Red, then Green, then Blue).
-    """ 
-
-    # TODO: put your code!!!!
-    # return r, g, b
+    # Return the three values together as one color
+    return r, g, b
 
 def read_int_in_range(prompt: str, low: int, high: int) -> int:
     """Ask user for an integer within [low, high]. 
