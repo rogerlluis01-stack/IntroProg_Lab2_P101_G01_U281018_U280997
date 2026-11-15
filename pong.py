@@ -135,27 +135,30 @@ def read_color(prompt: str) -> tuple[int, int, int]:
     return r, g, b
 
 def read_int_in_range(prompt: str, low: int, high: int) -> int:
-    """Ask user for an integer within [low, high]. 
-    Keeps asking until a valid value is entered.
-    The implementation must not stop the program due to an error.
-    Should be robust to out-of-range numbers and non-integer input.
-
-    Parameters
-    ----------
-    prompt : str
-        The message that will appear before the user types input.
-        Example: "Enter paddle height".
-    low : int
-        The minimum allowed integer value.
-    high : int
-        The maximum allowed integer value.
-
-    Returns
-    -------
-    An integer value such that low <= value <= high.
     """
-    
-    # TODO: put your code!!!!
+    Ask the player for a whole number between 'low' and 'high' (both included).
+    Keeps asking until a valid number is entered, then returns it.
+    """
+
+    # Repeat until the player enters a valid value
+    while True:
+        # Show the question with the allowed range and remove extra spaces
+        text = input(f"{prompt} from {low} to {high}: ").strip()
+
+        # Try to convert the text to an integer
+        try:
+            value = int(text)
+        except ValueError:
+            # The input was not a whole number (e.g. "abc" or "3.5")
+            print("Please enter a whole number.")
+            continue # go back to the start of the loop and ask again
+
+        # If the number is inside the range, it is valid: return it
+        if low <= value <= high:
+            return value
+
+        # The number is outside the range: tell the player and ask again
+        print(f"The value must be between {low} and {high}.")
 
 def read_int_in_range_w_default(prompt: str, low: int, high: int, default_val: int) -> int:
     """ Advanced/alternate more user-friendly version of read_int_in_range().
