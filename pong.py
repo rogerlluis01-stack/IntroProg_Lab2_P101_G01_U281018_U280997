@@ -97,41 +97,23 @@ def get_config() -> tuple[int, int, int, int, int]:
     return paddle_h, paddle_speed, ball_vx, ball_vy, ball_radius
 
 def change_colors() -> tuple[tuple[int, int, int], tuple[int, int, int]]:
-    """ Ask the user if they want to modify the game colors (background and foreground).
-
-    If the user chooses **not** to change colors, return the default color tuples:
-        (BLACK, WHITE)
-
-    If the user answers **yes**, the function should:
-      - Ask for a new **background** color.
-      - Ask for a new **foreground** color (the color used for paddles, ball, and text).
-      - Each color must be entered as a tuple of three integers
-        representing the RGB components (Red, Green, Blue),
-        with each value between 0 and 255.
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    -------
-    tuple[tuple[int, int, int], tuple[int, int, int]]
-        Two RGB color tuples: (background_color, foreground_color)
-
-    Notes and hints
-    ---------------
-    - Use `ask_yes_no(prompt)` to decide whether to open the color configuration.
-    - Use `read_color(prompt)` to read one color at a time.
-      This function should itself ask for the three RGB components.
-    - Remember that colors in pygame are defined as tuples of 3 integers: (red, green, blue)
-    - Keep the order of returned values consistent: first background, then foreground.
+    """
+    Ask the player whether they want to customise the game colors.
+    Returns a tuple with (background color, foreground color),
+    where each color is an (R, G, B) tuple.
     """
 
-    # TODO: put your code!!!!
+    # If the player answers "no", keep the default colors:
+    # black background and white foreground (paddles, ball, text)
+    if not ask_yes_no("Do you want to change the colors?"):
+        return BLACK, WHITE
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
-    return BLACK, WHITE
+    # Otherwise, ask the player to choose each color
+    backg_col = read_color("background") # color of the game window background
+    foreg_col = read_color("foreground") # color of the paddles, ball and score
+
+    # Return both colors so the game can use them when drawing
+    return backg_col, foreg_col
 
 def read_color(prompt: str) -> tuple[int, int, int]:
     """Ask the user to enter the three RGB components of a color with each component in [0,255].
