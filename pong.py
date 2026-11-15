@@ -193,33 +193,28 @@ def read_int_in_range_w_default(prompt: str, low: int, high: int, default_val: i
         print(f"The value must be between {low} and {high}.")
 
 def ask_yes_no(prompt: str) -> bool:
-    """ Ask the user a yes/no question and return the corresponding Boolean value.
-
-    The function should repeatedly prompt the user until a valid answer
-    is given. It must accept both upper- and lowercase input, and it should
-    not crash on unexpected text.
-
-    Parameters
-    ----------
-    prompt : str
-        The question to show to the user (for example: "Change colors?").
-        The function should append "(y/n):" or similar guidance to the prompt
-        when displaying it.
-
-    Returns
-    -------
-    bool
-        True  → if the user answered "y" or "yes"
-        False → if the user answered "n" or "no"
-
-    Notes and hints
-    ---------------
-    - Accept short forms ("y", "n") and optionally full words ("yes", "no").
-    - Accept also UPPERCASE, so better convert user input to lowercase
-    - Print a short message (e.g. "Please answer y/n.") when the answer is invalid.
-    - Return only after receiving a valid input; do not stop the program with errors.
     """
-    # TODO: put your code!!!!
+    Ask the player a yes/no question.
+    Returns True if the answer is yes and False if it is no.
+    Keeps asking until a valid answer is entered.
+    """
+
+    # Repeat until the player gives a valid answer
+    while True:
+        # Show the question, remove extra spaces and convert to lowercase
+        # so "Y", "YES" or " yes " are also accepted
+        answer = input(f"{prompt} (y/n): ").strip().lower()
+
+        # Accept "y" or "yes" as a positive answer
+        if answer == "y" or answer == "yes":
+            return True
+
+        # Accept "n" or "no" as a negative answer
+        if answer == "n" or answer == "no":
+            return False
+
+        # Any other answer is invalid: tell the player and ask again
+        print("Please answer y/n.")
 
 # ================================
 # Functions to complete: main game
