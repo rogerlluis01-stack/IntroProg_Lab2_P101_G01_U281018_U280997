@@ -318,80 +318,52 @@ def collide_ball_paddle(x: int, y: int, vx: int, vy: int, paddle_x: int, paddle_
     return x, y, vx, vy, hit
 
 def reset_ball(center_x: int, center_y: int, vx0: int, vy0: int, to_right: bool) -> tuple[int, int, int, int]:
-    """ Reset the ball to the center of the screen and return its initial position and velocity after a point has been scored.
-
-    The ball should always restart from the center coordinates given by `center_x` and `center_y`, 
-    but its horizontal direction depends on the Boolean parameter `to_right`:
-      - If `to_right` is True  → the ball moves to the right.
-      - If `to_right` is False → the ball moves to the left.
-
-    A small random variation may be added to the vertical speed so that the game does not become too predictable.
-
-    Parameters
-    ----------
-    center_x : int  - The x-coordinate of the screen center (starting horizontal position).
-    center_y : int  - The y-coordinate of the screen center (starting vertical position).
-    vx0 : int       - The base horizontal speed to be used (positive number).
-    vy0 : int       - The base vertical speed to be used (positive number).
-    to_right : bool - True if the ball should start moving to the right, False for the left.
-
-    Returns
-    -------
-    x, y, vx, vy:
-        x  new horizontal position (center)
-        y  new vertical position (center)
-        vx horizontal velocity (sign depends on `to_right`)
-        vy vertical velocity (possibly randomized sign and/or magnitude)
-
-    Notes and hints
-    ---------------
-    - The function should not draw anything, only compute and return values.
-    - The starting position is always the screen center.
-    - The horizontal velocity must point in the correct direction depending on `to_right`.
-    - Optionally, randomize the vertical velocity slightly (e.g., sign or magnitude) for variability.
+    """
+    Put the ball back in the center of the screen after a point is scored.
+    'center_x' and 'center_y' are the center of the window,
+    'vx0' and 'vy0' are the starting speeds of the ball,
+    and 'to_right' decides which side the ball moves towards.
+    Returns the new (x, y, vx, vy) of the ball.
     """
 
-    # TODO: put your code!!!!
+    # Horizontal direction depends on the Boolean parameter to_right
+    if to_right:
+        vx = vx0 # if True, the ball moves to the right
+    else:
+        vx = -vx0 # if False, the ball moves to the left
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate/modify it when adding your code
-    return center_x, center_y, vx0, vy0
+    # Random vertical direction so that the game is not predictable
+    if random.random() < 0.5: # 50% chance to go down or up
+        vy = vy0
+    else:
+        vy = -vy0
+
+    # The ball starts again from the center with its new speeds
+    return center_x, center_y, vx, vy
 
 
 
 def compute_ai_direction(ball_y: int, paddle_y: int, paddle_h: int) -> int:
-    """ Compute the movement direction (-1, 0, +1) for an AI-controlled paddle.
-    The goal is to make the paddle follow the ball vertically with a simple,
-    limited reaction. The AI should move the paddle upward, downward,
-    or stay still depending on the position of the ball relative to the
-    paddle's center.
-
-    Parameters
-    ----------
-    ball_y : int
-        The current vertical position of the ball (center of the ball).
-    paddle_y : int
-        The current vertical position of the paddle (top edge).
-    paddle_h : int
-        The height of the paddle (to compute its center).
-
-    Returns
-    -------
-    int
-        -1 → move up  
-         0 → stay still  
-        +1 → move down
-    
-    Notes and hints
-    ---------------
-    The function should return only the direction, not update positions.
-    You might want to use a small tolerance margin so the paddle doesn't “vibrate” 
-    when the ball is aligned enough.
     """
-    # TODO: put your code!!!!
+    Decide which way the computer-controlled paddle should move.
+    'ball_y' is the vertical position of the ball, 'paddle_y' the top
+    of the paddle and 'paddle_h' its height.
+    Returns -1 (move up), 1 (move down) or 0 (stay still).
+    """
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
+    # Vertical center of the paddle
+    paddle_center = paddle_y + paddle_h / 2
+
+    # Small margin in pixels so the paddle stays still when the ball is
+    # close to its center, instead of shaking up and down every frame
+    tolerance = 10
+
+    if ball_y < paddle_center - tolerance:
+        return -1 # ball is above the paddle -> move up
+    elif ball_y > paddle_center + tolerance:
+        return 1 # ball is below the paddle -> move down
+
+    # Ball is within the tolerance zone -> don't move
     return 0
 
 # =============================================
