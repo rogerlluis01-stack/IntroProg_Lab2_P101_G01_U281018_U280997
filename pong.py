@@ -221,45 +221,42 @@ def ask_yes_no(prompt: str) -> bool:
 # ================================
 
 def move_paddle(current_y: int, direction: int, speed: int, height: int, paddle_h: int) -> int:
-    """Return new y coordinate of a paddle, updating current position
-    Parameters:
-        current_y - current top position of the paddle (pixels)
-        direction - movement direction: -1 (up), 0 (no move), +1 (down)
-        speed     - number of pixels to move per frame (speed is always positive. It will be up or down depending on direction)
-        height    - height of the board
-        paddle_h  - height of the paddle
-    Returns:
-        new_y     - updated y position (pixels)
-    
-    Take into account that the paddle must always stay fully visible on screen.
-    That is when it reaches the limits (up or down) it stays there, so consider paddle_h and height here.
     """
-    # TODO: put your code!!!!
-    
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
-    return current_y
+    Calculate the new vertical position of a paddle.
+    'current_y' is the top edge of the paddle, 'direction' is -1 (up),
+    1 (down) or 0 (no movement), 'speed' is how many pixels it moves,
+    'height' is the window height and 'paddle_h' is the paddle height.
+    Returns the new y position, kept inside the screen.
+    """
 
+    # Move the paddle: direction decides up/down, speed decides how far
+    new_y = current_y + (direction * speed)
+
+    # If the paddle goes above the top of the screen, stop it at the top
+    if new_y < 0:
+        new_y = 0
+    # If the bottom of the paddle goes below the screen, stop it at the bottom
+    elif new_y > height - paddle_h:
+        new_y = height - paddle_h # guarantee that the whole paddle stays visible on the screen
+
+    # Return the corrected position
+    return new_y
 
 def move_ball(x: int, y: int, vx: int, vy: int) -> tuple[int, int]:
-    """Move the ball one time step. Return (x', y').
-    Parameters:
-        x  - current horizontal position of the ball (pixels)
-        y  - current vertical position of the ball (pixels)
-        vx - horizontal speed (pixels increment at each step)
-        vy - vertical speed (pixels increment at each step)
-    Returns:
-        new_x, new_y - updated horizontal and vertical position (pixels)
-    
-    Note that collisions (i.e. with the paddles, with the walls) are not considered yet here, 
-    but in the next 2 functions (collide_ball_walls and collide_ball_paddle)
+    """
+    Calculate the new position of the ball after one frame.
+    'x' and 'y' are the current position of the ball,
+    'vx' and 'vy' are its horizontal and vertical speeds.
+    Returns the new (x, y) position.
     """
 
-    # TODO: put your code!!!!
+    # Move the ball horizontally: positive vx = right, negative vx = left
+    new_x = x + vx
+    # Move the ball vertically: positive vy = down, negative vy = up
+    new_y = y + vy
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
-    return x, y
+    # Return the new position
+    return new_x, new_y
 
 
 def collide_ball_walls(x: int, y: int, vx: int, vy: int, radius: int, width: int, height: int) -> tuple[int, int, int, int]:
