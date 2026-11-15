@@ -161,41 +161,36 @@ def read_int_in_range(prompt: str, low: int, high: int) -> int:
         print(f"The value must be between {low} and {high}.")
 
 def read_int_in_range_w_default(prompt: str, low: int, high: int, default_val: int) -> int:
-    """ Advanced/alternate more user-friendly version of read_int_in_range().
-    Works like the basic version, but adds support for a *default value*.
-    You can do it as a substitute, but we recommend you to start with the basic one
-
-    If the user simply presses ENTER without typing anything,
-    the function immediately returns `default_val` **without asking again**.
-
-    Behavior summary:
-      - Ask the user for an integer in the range [low, high].
-      - If the user enters a valid number, return it.
-      - If the user presses ENTER directly, return `default_val`.
-      - If the user enters text or an out-of-range number, print an error
-        message and repeat the question.
-
-    Parameters
-    ----------
-    prompt : str
-        Message shown to the user before input.
-    low : int
-        Minimum allowed integer value.
-    high : int
-        Maximum allowed integer value.
-    default_val : int
-        Value returned when the user presses ENTER without typing anything.
-        It should be inside the range [low, high].
-        Take the value from the CONSTANT defined at the beginning
-
-    Returns
-    -------
-    int
-        The integer entered by the user, or `default_val` if the user pressed ENTER.
     """
-    
-    # TODO: put your code!!!!
+    Ask the player for a whole number between 'low' and 'high' (both included).
+    If the player just presses ENTER, 'default_val' is returned instead.
+    Keeps asking until a valid number (or ENTER) is entered.
+    """
 
+    # Repeat until the player enters a valid value or presses ENTER
+    while True:
+        # Show the question with the allowed range and the default value,
+        # and remove extra spaces from the answer
+        text = input(f"{prompt} from {low} to {high} (ENTER = {default_val}): ").strip()
+
+        # Empty answer (only ENTER pressed): use the default value
+        if text == "":
+            return default_val
+
+        # Try to convert the text to an integer
+        try:
+            value = int(text)
+        except ValueError:
+            # The input was not an integer number ( "abc" or "3.5")
+            print("Please enter a whole number.")
+            continue # go back to the start of the loop and ask again
+
+        # If the number is inside the range, it is valid: return it
+        if low <= value <= high:
+            return value
+
+        # The number is outside the range: tell the player and ask again
+        print(f"The value must be between {low} and {high}.")
 
 def ask_yes_no(prompt: str) -> bool:
     """ Ask the user a yes/no question and return the corresponding Boolean value.
