@@ -260,84 +260,61 @@ def move_ball(x: int, y: int, vx: int, vy: int) -> tuple[int, int]:
 
 
 def collide_ball_walls(x: int, y: int, vx: int, vy: int, radius: int, width: int, height: int) -> tuple[int, int, int, int]:
-    """Detect and handle collisions with top/bottom walls.
-    Parameters:
-        x       - current horizontal position of the ball (pixels)
-        y       - current vertical position of the ball (pixels)
-        vx      - horizontal speed (pixels increment at each step)
-        vy      - vertical speed (pixels increment at each step)
-        radius  - of the ball (pixels)
-        width   - of the board (pixels). Not needed here: goals are handled in main()
-        height  - of the board (pixels)
-    Returns:
-        updated x, y, vx, vy
-    Rules:
-        Make sure the ball stays inside the area.
-        Do not consider "goals" (ball hitting vertical walls) here. Check only horizontal bounces on top/bottom walls
-        When hitting a horizontal wall, change the sign of vy
-        For precisely detecting collisions, you might need to consider the ball radius
     """
-    # TODO: put your code!!!!
+    Make the ball bounce off the top and bottom walls of the screen.
+    'x' and 'y' are the center of the ball, 'vx' and 'vy' its speeds,
+    'radius' its size, and 'width' and 'height' the window size.
+    Returns the updated (x, y, vx, vy).
+    """
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
+    # The top edge of the ball (y - radius) has reached or passed the top wall
+    if y - radius <= 0:
+        y = radius # put the ball back just inside the screen
+        vy = -vy # reverse vertical direction so it bounces down
+    # The bottom edge of the ball (y + radius) has reached or passed the bottom wall
+    elif y + radius >= height:
+        y = height - radius # put the ball back just inside the screen
+        vy = -vy # reverse vertical direction so it bounces up
+
+    # x and vx are not changed here: the left and right sides are not walls,
+    # they are where points are scored
     return x, y, vx, vy
-
 
 def collide_ball_paddle(x: int, y: int, vx: int, vy: int, paddle_x: int, paddle_y: int, paddle_w: int, paddle_h: int, radius: int) -> tuple[int, int, int, int, bool]:
     """
-    Detect and handle a collision between the ball and a paddle
-    using a simple AABB (Axis-Aligned Bounding Box) approximation.
-
-    Parameters
-    ----------
-    x, y : Current position of the CENTER of the ball (in pixels).
-           Remember: (0,0) is the top-left corner of the screen.
-    vx, vy : Current horizontal and vertical speed of the ball (pixels per frame).
-    paddle_x, paddle_y : Top-left corner of the paddle.
-    paddle_w, paddle_h : Width and height of the paddle.
-    radius : Radius of the ball.
-
-    Returns
-    -------
-    x_new, y_new : Possibly corrected position of the ball (e.g. moved just outside the paddle).
-    vx_new, vy_new : Possibly modified velocities. vx is inverted if collision occurs.
-    hit : True if a collision occurred, False otherwise.
-
-    Algorithm and hints
-    -------------------
-    1. Approximate the circular ball by a small square defined by:
-           left   = x - radius
-           right  = x + radius
-           top    = y - radius
-           bottom = y + radius
-       This makes collision checks simpler: rectangles only.
-
-    2. Compare this "ball box" with the paddle rectangle defined by:
-           left   = paddle_x
-           right  = paddle_x + paddle_w
-           top    = paddle_y
-           bottom = paddle_y + paddle_h
-       A collision happens when the two rectangles overlap.
-
-    3. If they overlap:
-         - Invert vx (horizontal speed) to make the ball bounce.
-         - Move the ball just outside the paddle, so that it does not get "stuck"
-           (overlapping again on the next frame and bouncing back and forth inside the paddle).
-         - [OPTIONAL] You can also try to apply some "effect" making vy slightly dependent on where the ball
-           hits the paddle (experiment!)
-
-    Notes
-    -----
-    - The paddle and ball are both **axis-aligned**, so no trigonometry is needed.
-    - The collision box ignores the ball's circular shape for simplicity,
-      which is sufficient for this game.
+    Check if the ball hits a paddle and, if so, make it bounce.
+    'x' and 'y' are the center of the ball, 'vx' and 'vy' its speeds,
+    'paddle_x' and 'paddle_y' the top-left corner of the paddle,
+    'paddle_w' and 'paddle_h' its size, and 'radius' the ball's radius.
+    Returns the updated (x, y, vx, vy) and 'hit' (True if there was a collision).
     """
-    # TODO: put your code!!!!
+
+    # No collision yet
     hit = False
 
-    # This line of code has been left for letting the full program work
-    # You will need to eliminate it when adding your code
+    # Ball's bounding box: we use the radius to calculate the 4 edges of the ball
+    ball_left = x - radius
+    ball_right = x + radius
+    ball_top = y - radius
+    ball_bottom = y + radius
+
+    # Paddle's box: calculated from its top-left corner, width and height
+    pad_left = paddle_x
+    pad_right = paddle_x + paddle_w
+    pad_top = paddle_y
+    pad_bottom = paddle_y + paddle_h
+
+    # The two boxes overlap (they touch horizontally AND vertically)
+    if ball_right >= pad_left and ball_left <= pad_right and ball_bottom >= pad_top and ball_top <= pad_bottom:
+        hit = True
+        # The ball collided with the paddle, so we adjust its position and direction
+        if vx < 0:  # moving left: it hit the left paddle, so we put it on the paddle's right side
+            x = pad_right + radius
+        else: # moving right: it hit the right paddle, so we put it on the paddle's left side
+            x = pad_left - radius
+        vx = -vx # reverse horizontal direction so it bounces back
+
+    # vy is not changed: the ball keeps its vertical direction after the bounce
     return x, y, vx, vy, hit
 
 def reset_ball(center_x: int, center_y: int, vx0: int, vy0: int, to_right: bool) -> tuple[int, int, int, int]:
