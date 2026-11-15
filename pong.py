@@ -67,51 +67,34 @@ KEY_UP_RIGHT = pygame.K_UP          # arrow UP
 KEY_DOWN_RIGHT = pygame.K_DOWN      # arrow DOWN
 
 # Play against machine (optional feature): set to True once compute_ai_direction() is implemented
-PLAY_AGAINST_MACHINE = False
+"""PLAY_AGAINST_MACHINE = True"""
 
 # ==============================================================================
 # Functions to complete by the students : configuration/setup before game starts
 # ==============================================================================
 
 def get_config() -> tuple[int, int, int, int, int]:
-    """ Ask the user whether they want to modify the main game parameters:
-    (paddle height, paddle speed, ball X speed, ball Y speed, and ball radius).
-   
-    If the user chooses **not** to open the configuration menu, the function
-    simply returns the default constant values defined at the top of the program:
-        (PADDLE_H, SPEED_PADDLE, SPEED_BALL_X, SPEED_BALL_Y, BALL_RADIUS)
-
-    If the user answers **yes**, the function should:
-      - For each configurable value, call `read_int_in_range()` to ask for a new number
-        within reasonable limits (for example: paddle height between 60-160).
-      - Collect the five resulting integers and return them together in the following order:
-            (paddle_height, paddle_speed, ball_x_speed, ball_y_speed, ball_radius)
-
-    Parameters
-    ----------
-    None
-
-    Returns
-    -------
-    int, int, int, int, int : 
-        the selected configuration values in the specified order ->
-        paddle_height, paddle_speed, ball_x_speed, ball_y_speed, ball_radius
-
-    Notes and hints
-    ---------------
-    - Use `ask_yes_no(prompt)` to decide whether to open the menu.
-    - Use `read_int_in_range(prompt, low, high)` to read each numeric value.
-    - Keep the function free of global assignments: it should only **return**
-      the chosen values, not modify constants.
-    - Remember to maintain the same order of the returned elements.
+    """
+    Ask the player whether they want to customise the game settings.
+    Returns a tuple with (paddle height, paddle speed, ball X speed,
+    ball Y speed, ball radius).
     """
 
-    # TODO: put your code!!!!
+    # If the player answers "no", keep the default values defined as constants
+    if not ask_yes_no("Do you want to change the game parameters?"):
+        return PADDLE_H, SPEED_PADDLE, SPEED_BALL_X, SPEED_BALL_Y, BALL_RADIUS
 
-    # This line of code has been left for letting the full program work
-    # It corresponds to the user answering NO to changing any default values 
-    # You will need to eliminate it when adding your code
-    return PADDLE_H, SPEED_PADDLE, SPEED_BALL_X, SPEED_BALL_Y, BALL_RADIUS 
+    # Otherwise, ask for each parametre one by one.
+    # Each value must be witin the given range (min, max);
+    # if the player just presses Enter, the default value is used.
+    paddle_h = read_int_in_range_w_default("Paddle height", 60, 160, PADDLE_H) # height of the paddles in pixels
+    paddle_speed = read_int_in_range_w_default("Paddle speed", 3, 15, SPEED_PADDLE) # pixels the paddle moves per frame
+    ball_vx = read_int_in_range_w_default("Ball X speed", 2, 12, SPEED_BALL_X) # horizontal speed of the ball
+    ball_vy = read_int_in_range_w_default("Ball Y speed", 2, 12, SPEED_BALL_Y) # vertical speed of the ball
+    ball_radius = read_int_in_range_w_default("Ball radius", 4, 20, BALL_RADIUS) # size of the ball in pixels
+
+    # Return all the chosen values so the game can use them
+    return paddle_h, paddle_speed, ball_vx, ball_vy, ball_radius
 
 def change_colors() -> tuple[tuple[int, int, int], tuple[int, int, int]]:
     """ Ask the user if they want to modify the game colors (background and foreground).
